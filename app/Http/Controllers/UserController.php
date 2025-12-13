@@ -107,14 +107,13 @@ class UserController extends Controller
             
             if ($search) {
                 $positions = Position::where('position_name','LIKE', "%$search%")
-                    ->where('position_id','LIKE', "%$search%")
-                    ->orWhere('position_name','LIKE', "%$search%")
+                    ->orWhere('position_id','LIKE', "%$search%")
                     ->orWhere('description','LIKE', "%$search%")
                 ->get();
             } else {
                 $positions = Position::get();
             }
-    
+
             return view('PositionsDisplay', compact('positions'));
         }
 
@@ -138,4 +137,35 @@ class UserController extends Controller
             return view('VoteCountsDisplay', compact('votecounts'));
         }
 
-}
+        public function ArchivedPositionsDisplay(Request $request) {
+            $search = $request->input('search');
+            
+            if ($search) {
+                $positions = Position::onlyTrashed()
+                    ->where('position_name','LIKE', "%$search%")
+                    ->orWhere('position_id','LIKE', "%$search%")
+                    ->orWhere('description','LIKE', "%$search%")
+                ->get();
+            } else {
+                $positions = Position::onlyTrashed()->get();
+            }
+
+            return view('ArchivedPositionsDisplay', compact('positions'));
+        }
+
+        // Soft Delete Position
+        public function delete($id) {
+            $position = Position::findOrFail($id);
+            $position->delete();
+            
+            return redirect()->route('display.positions')->with('success', 'Position archived successfully!');
+        }
+        
+        // Restore Position
+        public function restore($id) {
+            $position = Position::onlyTrashed()->findOrFail($id);
+            $position->restore();
+            
+            return redirect()->route('display.archived.positions')->with('success', 'Position restored successfully!');
+        }
+    }

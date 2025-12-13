@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidates</title>
+    <title>Positions</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="d-flex">
     <div class="bg-dark text-white p-4" style="width: 250px; height: 100vh;">
@@ -35,23 +34,34 @@
                 Vote Counts</a></li>
         </ul>
     </div>
-
 <div class="container mt-4">
-    <h3 class="mb-3">Positions</h3>
-
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Active Positions</h3>
+        <a href="{{ url('/display-archived-positions') }}" class="btn btn-secondary">View Trashed Positions</a>
+    </div>
+    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
     <form action="{{ url('/display-positions') }}" method="GET" class="mb-3">
         <div class="input-group">
             <input type="search" name="search" id="" class="form-control" placeholder="Search position..." autocomplete="off">
             <input type="submit" value="Search" class="btn btn-primary">
         </div>
     </form>
-
+    
+    @if($positions->count() > 0)
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Position Name</th>
                 <th>Description</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -60,10 +70,22 @@
                     <td>{{ $position->position_id }}</td>
                     <td>{{ $position->position_name }}</td>
                     <td>{{ $position->description }}</td>
+                    <td>
+                        <a href="{{ url('/edit-position/'.$position->position_id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
+                        <form action="{{ url('delete/'.$position->position_id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Are you sure you want to delete this position?')">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    @else
+        <div class="alert alert-info text-center">
+            No active positions found.
+        </div>
+    @endif
 </div>
 </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

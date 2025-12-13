@@ -19,6 +19,16 @@ Route::get('/display-votes', [UserController::class, 'DisplayVotes'])->name('vot
 
 Route::get('/display-candidates', [UserController::class, 'CandidatesDisplay'])->name('display.candidates');
 
+Route::get('/display-vote-counts', [UserController::class, 'VoteCountsDisplay'])->name('display.vote.counts');
+
+// Active Positions
 Route::get('/display-positions', [UserController::class, 'PositionsDisplay'])->name('display.positions');
 
-Route::get('/display-vote-counts', [UserController::class, 'VoteCountsDisplay'])->name('display.vote.counts');
+// Trashed Positions
+Route::get('/display-archived-positions', [UserController::class, 'ArchivedPositionsDisplay'])->name('display.archived.positions');
+
+// Soft Delete Position
+Route::post('delete/{id}', [UserController::class, 'delete'])->name('delete');
+
+// Restore Position
+Route::post('restore/{id}', [UserController::class, 'restore'])->name('restore');
