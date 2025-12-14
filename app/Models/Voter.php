@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +8,8 @@ class Voter extends Model
     //Name of table
     protected $table = 'voters';
 
+    protected $primaryKey = 'voter_id';
+    
     // Fields
     protected $fillable = [
         'first_name',
@@ -17,12 +18,14 @@ class Voter extends Model
         'gender',
         'contact_information',
         'imagepath',
-        'created_at',
-        'updated_at'
+        'has_voted',
+        'status',
+        'deleted_at',
     ];
-
+    
     protected $casts = [
         'birthdate' => 'date',
+        'has_voted' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
-
 }

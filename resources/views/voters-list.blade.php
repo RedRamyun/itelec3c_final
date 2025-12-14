@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voters</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             background-color: #f0f4f8;
@@ -48,6 +49,20 @@
             border-radius: 20px;
             font-size: 0.85rem;
         }
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .status-disabled {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
         
         .empty-state {
             text-align: center;
@@ -60,10 +75,46 @@
             margin-bottom: 20px;
             opacity: 0.5;
         }
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            margin: 0 2px;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        .btn-view {
+            color: #1e40af;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        .btn-view:hover {
+            color: #1e3a8a;
+        }
+        .modal-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        .voter-image-modal {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid #1e40af;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .actions-column {
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="d-flex">
     <div class="bg-dark text-white p-4" style="width: 250px; height: 100vh;">
@@ -91,60 +142,160 @@
                 Vote Counts</a></li>
         </ul>
     </div>
-
     <div class="container" style="padding-top: 40px;">
         <div class="row justify-content-center">
             <div class="col-md-11 col-lg-10">
                 <div class="voter-container">
+                    <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h1 class="mb-0">Registered Voters</h1>
                         <a href="{{ route('register.voter') }}" class="btn btn-register">
                             + Register New Voter
                         </a>
                     </div>
-
                     @if($voters->count() > 0)
                         <div class="table-responsive">
-
-                            <form action="{{ url('/voters') }}" method="GET">
-                                <div class="input-group">
-                                    <input type="search" name="search" id="" class="form-control" placeholder="Search voter...">
-                                    <input type="submit" value="Search" class="btn btn-primary">
-                                </div>
-                            </form>
-
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <form action="{{ url('/voters') }}" method="GET" class="flex-grow-1 me-3">
+                                    <div class="input-group">
+                                        <input type="search" name="search" class="form-control" placeholder="Search voter...">
+                                        <input type="submit" value="Search" class="btn btn-primary">
+                                    </div>
+                                </form>
+                                <button class="btn btn-outline-primary" id="toggleActions" onclick="toggleActionsColumn()">
+                                    <i class="fas fa-cog"></i> Actions
+                                </button>
+                            </div>
                             <table class="table table-hover align-middle">
                                 <thead class="table-header">
                                     <tr>
-                                        <th scope="col">#</th>
+                                        <th scope="col">Voter ID</th>
                                         <th scope="col">Full Name</th>
-                                        <th scope="col">Date of Birth</th>
-                                        <th scope="col">Age</th>
-                                        <th scope="col">Gender</th>
-                                        <th scope="col">Contact Number</th>
-                                        <th scope="col">Image</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Registered Date</th>
+                                        <th scope="col" class="actions-column" style="display: none;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($voters as $index => $voter)
+                                    @foreach($voters as $voter)
                                     <tr>
-                                        <th scope="row">{{ $index + 1 }}</th>
+                                        <th scope="row">
+                                            <button class="btn-view" data-bs-toggle="modal" data-bs-target="#voterModal{{ $voter->voter_id }}" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            {{ $voter->voter_id }}
+                                        </th>
                                         <td class="fw-semibold">{{ $voter->first_name }} {{ $voter->last_name }}</td>
-                                        <td>{{ $voter->birthdate->format('F d, Y') }}</td>
-                                        <td>{{ $voter->birthdate->age }} years</td>
                                         <td>
-                                            <span class="voter-badge">{{ $voter->gender }}</span>
+                                            <span class="{{ $voter->status == 'Disabled' ? 'status-disabled' : 'status-active' }}">
+                                                {{ $voter->status ?? 'Active' }}
+                                            </span>
                                         </td>
-                                        <td>{{ $voter->contact_number }}</td>
-                                        <td><img src="{{asset('storage/'.$voter->imagepath)}}" alt="Voter Image" srcset="" width="50px"></td>
                                         <td>{{ $voter->created_at->format('M d, Y') }}</td>
+                                        <td class="actions-column" style="display: none;">
+                                            <a href="{{ route('voters.edit', $voter->voter_id) }}" class="btn btn-sm btn-warning btn-action">Edit</a>
+                                            
+                                            @if($voter->status == 'Disabled')
+                                            <form action="{{ route('voters.enable', $voter->voter_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to enable this voter?');">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-success btn-action">Enable</button>
+                                            </form>
+                                            @else
+                                            <form action="{{ route('voters.disable', $voter->voter_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to disable this voter?');">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-secondary btn-action">Disable</button>
+                                            </form>
+                                            @endif
+                                            
+                                            <form action="{{ route('voters.destroy', $voter->voter_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this voter?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger btn-action">Delete</button>
+                                            </form>
+                                        </td>
                                     </tr>
+
+                                    <!-- Modal for this voter -->
+                                    <div class="modal fade" id="voterModal{{ $voter->voter_id }}" tabindex="-1" aria-labelledby="voterModalLabel{{ $voter->voter_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="voterModalLabel{{ $voter->voter_id }}">
+                                                        <i class="fas fa-user-circle me-2"></i>Voter Details
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4 text-center mb-3">
+                                                            <img src="{{ asset('storage/'.$voter->imagepath) }}" alt="Voter Image" class="voter-image-modal">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Voter ID:</p>
+                                                                    <p>{{ $voter->voter_id }}</p>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Status:</p>
+                                                                    <p>
+                                                                        <span class="{{ $voter->status == 'Disabled' ? 'status-disabled' : 'status-active' }}">
+                                                                            {{ $voter->status ?? 'Active' }}
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <p class="info-label mb-1">Full Name:</p>
+                                                                    <p>{{ $voter->first_name }} {{ $voter->last_name }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Date of Birth:</p>
+                                                                    <p>{{ $voter->birthdate->format('F d, Y') }}</p>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Age:</p>
+                                                                    <p>{{ $voter->birthdate->age }} years</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Gender:</p>
+                                                                    <p><span class="voter-badge">{{ $voter->gender }}</span></p>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Contact Number:</p>
+                                                                    <p>{{ $voter->contact_information }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <p class="info-label mb-1">Registered Date:</p>
+                                                                    <p>{{ $voter->created_at->format('F d, Y - h:i A') }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-
                     @else
                         <div class="empty-state">
                             <div class="mb-3">📋</div>
@@ -162,5 +313,23 @@
 </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+        function toggleActionsColumn() {
+            const actionColumns = document.querySelectorAll('.actions-column');
+            const toggleBtn = document.getElementById('toggleActions');
+            
+            actionColumns.forEach(column => {
+                if (column.style.display === 'none') {
+                    column.style.display = 'table-cell';
+                    toggleBtn.classList.remove('btn-outline-primary');
+                    toggleBtn.classList.add('btn-primary');
+                } else {
+                    column.style.display = 'none';
+                    toggleBtn.classList.remove('btn-primary');
+                    toggleBtn.classList.add('btn-outline-primary');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
