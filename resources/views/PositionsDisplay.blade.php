@@ -4,7 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Positions</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+        
+        .position-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-top: 5px solid #1e40af;
+        }
+        
+        h1 {
+            color: #1e40af;
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .btn-add {
+            background-color: #1e40af;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-add:hover {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        .btn-register {
+            background-color: #1e40af;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-register:hover {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        
+        .position-badge {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            margin: 0 2px;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+        }
+        
+        .btn-view {
+            color: #1e40af;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        
+        .btn-view:hover {
+            color: #1e3a8a;
+        }
+        
+        .modal-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #1e40af;
+        }
+        
+        .actions-column {
+            transition: all 0.3s ease;
+        }
+        
+        .description-text {
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
     <!-- Sidebar -->
@@ -34,60 +147,150 @@
                 Vote Counts</a></li>
         </ul>
     </div>
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Active Positions</h3>
-        <a href="{{ url('/display-archived-positions') }}" class="btn btn-secondary">View Trashed Positions</a>
+    <div class="container" style="padding-top: 40px;">
+        <div class="row justify-content-center">
+            <div class="col-md-11 col-lg-10">
+                <div class="position-container">
+                    <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0">Active Positions</h1>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url('/display-archived-positions') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-archive"></i> View Trashed Positions
+                            </a>
+                            <a href="{{ route('position.create') }}" class="btn btn-register">
+                                + Add New Position
+                            </a>
+                        </div>
+                    </div>
+                    @if($positions->count() > 0)
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <form action="{{ url('/display-positions') }}" method="GET" class="flex-grow-1 me-3">
+                                    <div class="input-group">
+                                        <input type="search" name="search" class="form-control" placeholder="Search position...">
+                                        <input type="submit" value="Search" class="btn btn-primary">
+                                    </div>
+                                </form>
+                                <button class="btn btn-outline-primary" id="toggleActions" onclick="toggleActionsColumn()">
+                                    <i class="fas fa-cog"></i> Actions
+                                </button>
+                            </div>
+                            <table class="table table-hover align-middle">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Position ID</th>
+                                        <th scope="col">Position Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" class="actions-column" style="display: none;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($positions as $position)
+                                    <tr>
+                                        <th>
+                                            <button class="btn-view" data-bs-toggle="modal" data-bs-target="#positionModal{{ $position->position_id }}" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </th>
+                                        <th scope="row">
+                                            {{ $position->position_id }}
+                                        </th>
+                                        <td class="fw-semibold">{{ $position->position_name }}</td>
+                                        <td>
+                                            <span class="description-text" title="{{ $position->description }}">
+                                                {{ $position->description }}
+                                            </span>
+                                        </td>
+                                        <td class="actions-column" style="display: none;">
+                                            <a href="{{ url('/edit-position/'.$position->position_id) }}" class="btn btn-sm btn-warning btn-action">Edit</a>
+                                            
+                                            <form action="{{ url('delete/'.$position->position_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this position?');">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-danger btn-action">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal for this position -->
+                                    <div class="modal fade" id="positionModal{{ $position->position_id }}" tabindex="-1" aria-labelledby="positionModalLabel{{ $position->position_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="positionModalLabel{{ $position->position_id }}">
+                                                        <i class="fas fa-briefcase me-2"></i>Position Details
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Position ID:</p>
+                                                                    <p>{{ $position->position_id }}</p>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <p class="info-label mb-1">Position Name:</p>
+                                                                    <p><span class="position-badge">{{ $position->position_name }}</span></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <p class="info-label mb-1">Description:</p>
+                                                                    <p>{{ $position->description }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="empty-state">
+                            <div class="mb-3">📋</div>
+                            <h4>No Active Positions Yet</h4>
+                            <p class="mb-4">Start by adding your first position.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-    
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-    
-    <form action="{{ url('/display-positions') }}" method="GET" class="mb-3">
-        <div class="input-group">
-            <input type="search" name="search" id="" class="form-control" placeholder="Search position..." autocomplete="off">
-            <input type="submit" value="Search" class="btn btn-primary">
-        </div>
-    </form>
-    
-    @if($positions->count() > 0)
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Position Name</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($positions as $position)
-                <tr>
-                    <td>{{ $position->position_id }}</td>
-                    <td>{{ $position->position_name }}</td>
-                    <td>{{ $position->description }}</td>
-                    <td>
-                        <a href="{{ url('/edit-position/'.$position->position_id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
-                        <form action="{{ url('delete/'.$position->position_id) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Are you sure you want to delete this position?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @else
-        <div class="alert alert-info text-center">
-            No active positions found.
-        </div>
-    @endif
 </div>
-</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+        function toggleActionsColumn() {
+            const actionColumns = document.querySelectorAll('.actions-column');
+            const toggleBtn = document.getElementById('toggleActions');
+            
+            actionColumns.forEach(column => {
+                if (column.style.display === 'none') {
+                    column.style.display = 'table-cell';
+                    toggleBtn.classList.remove('btn-outline-primary');
+                    toggleBtn.classList.add('btn-primary');
+                } else {
+                    column.style.display = 'none';
+                    toggleBtn.classList.remove('btn-primary');
+                    toggleBtn.classList.add('btn-outline-primary');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

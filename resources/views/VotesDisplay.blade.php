@@ -4,10 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Votes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+        
+        .voter-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-top: 5px solid #1e40af;
+        }
+        
+        h1 {
+            color: #1e40af;
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .btn-register {
+            background-color: #1e40af;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-register:hover {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        
+        .voter-badge {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+        }
+        
+        .btn-view {
+            color: #1e40af;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        
+        .btn-view:hover {
+            color: #1e3a8a;
+        }
+        
+        .modal-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #1e40af;
+        }
+    </style>
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="d-flex">
     <div class="bg-dark text-white p-4" style="width: 250px; height: 100vh;">
@@ -35,42 +118,109 @@
                 Vote Counts</a></li>
         </ul>
     </div>
-
-<div class="container mt-4">
-    <h3 class="mb-3">Votes List</h3>
-
-    <form action="{{ url('/display-votes') }}" method="GET" class="mb-3">
-        <div class="input-group">
-            <input type="search" name="search" id="" class="form-control" placeholder="Search vote..." autocomplete="off">
-            <input type="submit" value="Search" class="btn btn-primary">
+    <div class="container" style="padding-top: 40px;">
+        <div class="row justify-content-center">
+            <div class="col-md-11 col-lg-10">
+                <div class="voter-container">
+                    <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0">Votes List</h1>
+                    </div>
+                    
+                    @if($votes->count() > 0)
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <form action="{{ url('/display-votes') }}" method="GET" class="flex-grow-1 me-3">
+                                    <div class="input-group">
+                                        <input type="search" name="search" class="form-control" placeholder="Search vote..." autocomplete="off">
+                                        <input type="submit" value="Search" class="btn btn-primary">
+                                    </div>
+                                </form>
+                            </div>
+                            <table class="table table-hover align-middle">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th scope="col">Vote ID</th>
+                                        <th scope="col">Voter Name</th>
+                                        <th scope="col">Candidate Voted</th>
+                                        <th scope="col">Voted Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($votes as $vote)
+                                    <tr>
+                                        <th scope="row">{{ $vote->vote_id }}</th>
+                                        <td class="fw-semibold">{{ $vote->first_name }} {{ $vote->last_name }}</td>
+                                        <td>{{ $vote->candidate_name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($vote->created_at)->format('M d, Y') }}</td>
+                                    </tr>
+                                    
+                                    <!-- Modal for this vote -->
+                                    <div class="modal fade" id="voteModal{{ $vote->vote_id }}" tabindex="-1" aria-labelledby="voteModalLabel{{ $vote->vote_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="voteModalLabel{{ $vote->vote_id }}">
+                                                        <i class="fas fa-vote-yea me-2"></i>Vote Details
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row mb-3">
+                                                        <div class="col-12">
+                                                            <p class="info-label mb-1">Vote ID:</p>
+                                                            <p>{{ $vote->vote_id }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-12">
+                                                            <p class="info-label mb-1">Voter Name:</p>
+                                                            <p>{{ $vote->first_name }} {{ $vote->last_name }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-12">
+                                                            <p class="info-label mb-1">Candidate Voted:</p>
+                                                            <p><span class="voter-badge">{{ $vote->candidate_name }}</span></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <p class="info-label mb-1">Voted Date:</p>
+                                                            <p>{{ \Carbon\Carbon::parse($vote->created_at)->format('F d, Y - h:i A') }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="empty-state">
+                            <div class="mb-3">🗳️</div>
+                            <h4>No Votes Recorded Yet</h4>
+                            <p class="mb-4">Votes will appear here once voters start casting their ballots.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
-    </form>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Voter Name</th>
-                <th>Candidate Voted</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($votes as $vote)
-                <tr>
-                    <td>{{ $vote->vote_id }}</td>
-                    <td>{{ $vote->first_name }} {{ $vote->last_name }}</td>
-                    <td>{{ $vote->candidate_name }}</td>
-                    <td>{{ $vote->created_at }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </div>
 </div>
-</div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz4YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

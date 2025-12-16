@@ -112,6 +112,46 @@
         .actions-column {
             transition: all 0.3s ease;
         }
+        /* Voter Key Hide/Show Styles */
+        .voter-key-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .voter-key-hidden {
+            font-family: monospace;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            user-select: none;
+        }
+        
+        .voter-key-revealed {
+            font-family: monospace;
+            color: #1e40af;
+            font-weight: 500;
+        }
+        
+        .voter-key-toggle {
+            cursor: pointer;
+            color: #1e40af;
+            font-size: 0.875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .voter-key-toggle:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        
+        .voter-key-toggle i {
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -155,9 +195,14 @@
                     @endif
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h1 class="mb-0">Registered Voters</h1>
-                        <a href="{{ route('register.voter') }}" class="btn btn-register">
-                            + Register New Voter
-                        </a>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url('/display-archived-voters') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-archive"></i> View Trashed Voters
+                            </a>
+                            <a href="{{ route('register.voter') }}" class="btn btn-register">
+                                + Register New Voter
+                            </a>
+                        </div>
                     </div>
                     @if($voters->count() > 0)
                         <div class="table-responsive">
@@ -175,20 +220,23 @@
                             <table class="table table-hover align-middle">
                                 <thead class="table-header">
                                     <tr>
+                                        <th scope="col"></th>
                                         <th scope="col">Voter ID</th>
                                         <th scope="col">Full Name</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Registered Date</th>
-                                        <th scope="col" class="actions-column" style="display: none;">Actions</th>
+                                        <th scope="col" class="actions-column" style="display: none;"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($voters as $voter)
                                     <tr>
-                                        <th scope="row">
+                                        <th>
                                             <button class="btn-view" data-bs-toggle="modal" data-bs-target="#voterModal{{ $voter->voter_id }}" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </button>
+                                        </th>
+                                        <th scope="row">
                                             {{ $voter->voter_id }}
                                         </th>
                                         <td class="fw-semibold">{{ $voter->first_name }} {{ $voter->last_name }}</td>
@@ -220,7 +268,6 @@
                                             </form>
                                         </td>
                                     </tr>
-
                                     <!-- Modal for this voter -->
                                     <div class="modal fade" id="voterModal{{ $voter->voter_id }}" tabindex="-1" aria-labelledby="voterModalLabel{{ $voter->voter_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -249,6 +296,19 @@
                                                                             {{ $voter->status ?? 'Active' }}
                                                                         </span>
                                                                     </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <p class="info-label mb-1">Voter Key:</p>
+                                                                    <div class="voter-key-container">
+                                                                        <p class="voter-key-hidden mb-0" id="voterKey{{ $voter->voter_id }}">••••••••••••••••</p>
+                                                                        <p class="voter-key-revealed mb-0" id="voterKeyRevealed{{ $voter->voter_id }}" style="display: none;">{{ $voter->voter_key }}</p>
+                                                                        <a class="voter-key-toggle" onclick="toggleVoterKey('{{ $voter->voter_id }}')">
+                                                                            <i class="fas fa-eye" id="voterKeyIcon{{ $voter->voter_id }}"></i>
+                                                                            <span id="voterKeyText{{ $voter->voter_id }}">Show Key</span>
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
@@ -329,6 +389,28 @@
                     toggleBtn.classList.add('btn-outline-primary');
                 }
             });
+        }
+        function toggleVoterKey(voterId) {
+            const hiddenKey = document.getElementById('voterKey' + voterId);
+            const revealedKey = document.getElementById('voterKeyRevealed' + voterId);
+            const icon = document.getElementById('voterKeyIcon' + voterId);
+            const text = document.getElementById('voterKeyText' + voterId);
+            
+            if (hiddenKey.style.display === 'none') {
+                // Hide the key
+                hiddenKey.style.display = 'block';
+                revealedKey.style.display = 'none';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                text.textContent = 'Show Key';
+            } else {
+                // Show the key
+                hiddenKey.style.display = 'none';
+                revealedKey.style.display = 'block';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                text.textContent = 'Hide Key';
+            }
         }
     </script>
 </body>

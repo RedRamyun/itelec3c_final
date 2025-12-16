@@ -9,6 +9,7 @@ class VoteCount extends Model
     protected $table = 'vote_counts';
 
     protected $fillable = [
-        'vote_count'
+        'candidate_id',
+        'vote_count',
     ];
 }

@@ -20,4 +20,12 @@ class Position extends Model
     ];
     
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get the candidates for this position
+     */
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class, 'position_id', 'position_id');
+    }
 }

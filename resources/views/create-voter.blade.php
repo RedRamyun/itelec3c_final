@@ -64,7 +64,7 @@
                     
                     <h1 class="text-center">Voter Registration</h1>
 
-                    <form action="{{route('register.voter')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('register.voter.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <!-- Voter Name -->
                         <div class="row mb-3">
@@ -124,7 +124,7 @@
                         <div class="row mb-4">
                             <div class="col">
                                 <label for="absimagepath">Voter Image</label>
-                                <input type="file" name="absimagepath" id="">
+                                <input type="file" name="absimagepath" id="absimagepath" class="form-control">
                             </div>
                         </div>
 

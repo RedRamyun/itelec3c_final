@@ -4,10 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vote Counts</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+        
+        .vote-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-top: 5px solid #1e40af;
+        }
+        
+        h1 {
+            color: #1e40af;
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .vote-badge {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+        }
+        
+        .candidate-rank {
+            background-color: #1e40af;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .candidate-name {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+    </style>
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="d-flex">
     <div class="bg-dark text-white p-4" style="width: 250px; height: 100vh;">
@@ -35,37 +99,69 @@
                 Vote Counts</a></li>
         </ul>
     </div>
-
-<div class="container mt-4">
-    <h3 class="mb-3">Vote Counts</h3>
-
-    <form action="{{ url('/display-vote-counts') }}" method="GET" class="mb-3">
-        <div class="input-group">
-            <input type="search" name="search" id="" class="form-control" placeholder="Search position..." autocomplete="off">
-            <input type="submit" value="Search" class="btn btn-primary">
+    <div class="container" style="padding-top: 40px;">
+        <div class="row justify-content-center">
+            <div class="col-md-11 col-lg-10">
+                <div class="vote-container">
+                    <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0">Vote Counts</h1>
+                    </div>
+                    
+                    @if($votecounts->count() > 0)
+                        <div class="table-responsive">
+                            <form action="{{ url('/display-vote-counts') }}" method="GET" class="mb-3">
+                                <div class="input-group">
+                                    <input type="search" name="search" class="form-control" placeholder="Search candidate..." autocomplete="off">
+                                    <input type="submit" value="Search" class="btn btn-primary">
+                                </div>
+                            </form>
+                            
+                            <table class="table table-hover align-middle">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th scope="col" class="text-center" style="width: 80px;">Rank</th>
+                                        <th scope="col">Candidate Name</th>
+                                        <th scope="col" class="text-center">Vote Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($votecounts as $index => $votecount)
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="candidate-rank">{{ $index + 1 }}</span>
+                                        </td>
+                                        <td class="candidate-name">{{ $votecount->candidate_name }}</td>
+                                        <td class="text-center">
+                                            <span class="vote-badge">
+                                                <i class="fas fa-chart-bar me-2"></i>{{ $votecount->vote_count }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="empty-state">
+                            <div class="mb-3">📊</div>
+                            <h4>No Vote Counts Available</h4>
+                            <p class="mb-4">Vote counts will appear here once voting begins.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
-    </form>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Candidate Name</th>
-                <th>Vote Counts</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($votecounts as $votecount)
-                <tr>
-                    <td>{{ $votecount->vote_count_id }}</td>
-                    <td>{{ $votecount->candidate_name }}</td>
-                    <td>{{ $votecount->vote_count }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </div>
 </div>
-</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz4YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
