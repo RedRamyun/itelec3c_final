@@ -88,6 +88,35 @@
             font-weight: 600;
             color: #1e40af;
         }
+        
+        /* Pagination Styles */
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .pagination .page-link {
+            color: #1e40af;
+            border: 1px solid #1e40af;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #1e40af;
+            border-color: #1e40af;
+            color: white;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #e0e7ff;
+            color: #1e40af;
+        }
+        
+        .pagination-info {
+            text-align: center;
+            color: #64748b;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -134,12 +163,12 @@
                         <h1 class="mb-0">Votes List</h1>
                     </div>
                     
-                    @if($votes->count() > 0)
+                    @if($votes->total() > 0)
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <form action="{{ url('/display-votes') }}" method="GET" class="flex-grow-1 me-3">
                                     <div class="input-group">
-                                        <input type="search" name="search" class="form-control" placeholder="Search vote..." autocomplete="off">
+                                        <input type="search" name="search" class="form-control" placeholder="Search vote..." value="{{ request('search') }}" autocomplete="off">
                                         <input type="submit" value="Search" class="btn btn-primary">
                                     </div>
                                 </form>
@@ -207,6 +236,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            
+                            <!-- Pagination Links -->
+                            <div class="pagination-wrapper">
+                                {{ $votes->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     @else
                         <div class="empty-state">

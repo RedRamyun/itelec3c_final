@@ -114,6 +114,35 @@
         .actions-column {
             transition: all 0.3s ease;
         }
+        
+        /* Pagination Styles */
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .pagination .page-link {
+            color: #1e40af;
+            border: 1px solid #1e40af;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #1e40af;
+            border-color: #1e40af;
+            color: white;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #e0e7ff;
+            color: #1e40af;
+        }
+        
+        .pagination-info {
+            text-align: center;
+            color: #64748b;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -166,12 +195,12 @@
                             </a>
                         </div>
                     </div>
-                    @if($candidates->count() > 0)
+                    @if($candidates->total() > 0)
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <form action="{{ url('/display-candidates') }}" method="GET" class="flex-grow-1 me-3">
                                     <div class="input-group">
-                                        <input type="search" name="search" class="form-control" placeholder="Search candidate...">
+                                        <input type="search" name="search" class="form-control" placeholder="Search candidate..." value="{{ request('search') }}">
                                         <input type="submit" value="Search" class="btn btn-primary">
                                     </div>
                                 </form>
@@ -309,6 +338,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            
+                            <!-- Pagination Links -->
+                            <div class="pagination-wrapper">
+                                {{ $candidates->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     @else
                         <div class="empty-state">

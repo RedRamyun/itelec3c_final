@@ -385,25 +385,25 @@
                                 </tbody>
                             </table>
                             
-<!-- Pagination Links -->
+                            <!-- Pagination Links -->
                             <div class="pagination-wrapper">
                                 {{ $voters->links('pagination::bootstrap-5') }}
                             </div>
-                    @else
-                        <div class="empty-state">
-                            <div class="mb-3">📋</div>
-                            <h4>No Registered Voters Yet</h4>
-                            <p class="mb-4">Start by registering your first voter.</p>
-                            <a href="{{ route('register.voter') }}" class="btn btn-register">
-                                Register First Voter
-                            </a>
+                            @else
+                                <div class="empty-state">
+                                    <div class="mb-3">📋</div>
+                                    <h4>No Registered Voters Yet</h4>
+                                    <p class="mb-4">Start by registering your first voter.</p>
+                                    <a href="{{ route('register.voter') }}" class="btn btn-register">
+                                        Register First Voter
+                                    </a>
+                                </div>
+                            @endif
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script>
