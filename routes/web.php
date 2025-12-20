@@ -5,11 +5,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoterController;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\Auth\VoterAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     // Count total registered voters (not deleted)
@@ -46,30 +47,43 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Voter Routes
-Route::get('/register-voter', [VoterController::class, 'create'])->name('register.voter');
-Route::post('/register-voter', [VoterController::class, 'store'])->name('register.voter.store');
-Route::get('/voter-registered/{id}', [VoterController::class, 'registrationSuccess'])->name('voter.registered.success');
-Route::get('/voters', [VoterController::class, 'index'])->middleware('auth')->name('voters.list');
+// ===== VOTER LOGIN & VOTING ROUTES =====
+Route::get('/voter-login', [VoterAuthController::class, 'showLoginForm'])->name('voter.login');
+Route::post('/voter-authenticate', [VoterAuthController::class, 'authenticate'])->name('voter.authenticate');
+Route::get('/voter/candidates', [VoteController::class, 'showCandidatesPage'])->name('voter.candidates');
+Route::get('/voter/voting', [VoteController::class, 'showVotingPage'])->name('voter.voting');
+Route::post('/voter/submit-vote', [VoteController::class, 'submitVote'])->name('voter.submit-vote');
+Route::get('/voter/results', [VoteController::class, 'showResults'])->name('voter.results');
+Route::post('/voter-logout', [VoterAuthController::class, 'logout'])->name('voter.logout');
+
+// Voter Routes - Admin Only
+Route::middleware('auth')->group(function () {
+    Route::get('/register-voter', [VoterController::class, 'create'])->name('register.voter');
+    Route::post('/register-voter', [VoterController::class, 'store'])->name('register.voter.store');
+    Route::get('/voter-registered/{id}', [VoterController::class, 'registrationSuccess'])->name('voter.registered.success');
+    Route::get('/voters', [VoterController::class, 'index'])->name('voters.list');
 Route::get('/voters/{id}/edit', [VoterController::class, 'edit'])->name('voters.edit');
 Route::put('/voters/{id}', [VoterController::class, 'update'])->name('voters.update');
 Route::delete('/voters/{id}', [VoterController::class, 'destroy'])->name('voters.destroy');
 Route::post('/voters/{id}/disable', [VoterController::class, 'disable'])->name('voters.disable');
 Route::post('/voters/{id}/enable', [VoterController::class, 'enable'])->name('voters.enable');
 Route::get('/display-archived-voters', [VoterController::class, 'ArchivedVotersDisplay'])->name('display.archived.voters');
-Route::post('restore-voter/{id}', [VoterController::class, 'restore'])->name('restore.voter');
-Route::delete('force-delete-voter/{id}', [VoterController::class, 'forceDelete'])->name('force.delete.voter');
+    Route::post('restore-voter/{id}', [VoterController::class, 'restore'])->name('restore.voter');
+    Route::delete('force-delete-voter/{id}', [VoterController::class, 'forceDelete'])->name('force.delete.voter');
+});
 
-// Candidate Routes
-Route::get('/display-candidates', [CandidateController::class, 'index'])->name('display.candidates');
-Route::get('/register-candidate', [CandidateController::class, 'create'])->name('register.candidate');
-Route::post('/register-candidate', [CandidateController::class, 'store'])->name('register.candidate.store');
-Route::get('/candidates/{id}/edit', [CandidateController::class, 'edit'])->name('candidates.edit');
+// Candidate Routes - Admin Only
+Route::middleware('auth')->group(function () {
+    Route::get('/display-candidates', [CandidateController::class, 'index'])->name('display.candidates');
+    Route::get('/register-candidate', [CandidateController::class, 'create'])->name('register.candidate');
+    Route::post('/register-candidate', [CandidateController::class, 'store'])->name('register.candidate.store');
+    Route::get('/candidates/{id}/edit', [CandidateController::class, 'edit'])->name('candidates.edit');
 Route::put('/candidates/{id}', [CandidateController::class, 'update'])->name('candidates.update');
 Route::delete('/candidates/{id}', [CandidateController::class, 'destroy'])->name('candidates.destroy');
 Route::delete('force-delete-candidate/{id}', [CandidateController::class, 'forceDelete'])->name('force.delete.candidate');
-Route::post('/candidates/{id}/disable', [CandidateController::class, 'disable'])->name('candidates.disable');
-Route::post('/candidates/{id}/enable', [CandidateController::class, 'enable'])->name('candidates.enable');
+    Route::post('/candidates/{id}/disable', [CandidateController::class, 'disable'])->name('candidates.disable');
+    Route::post('/candidates/{id}/enable', [CandidateController::class, 'enable'])->name('candidates.enable');
+});
 
 // Vote Routes
 Route::get('/display-votes', [VoteController::class, 'DisplayVotes'])->name('votes.display');

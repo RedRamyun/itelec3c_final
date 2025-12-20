@@ -55,13 +55,21 @@ class CandidateController extends Controller
         $validated = $request->validate([
             'candidate_name' => 'required|string|max:255',
             'party_affiliation' => 'required|string|max:255',
-            'position_id' => 'required|exists:positions,position_id'
+            'position_id' => 'required|exists:positions,position_id',
+            'imagepath' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('imagepath')) {
+            $imagePath = $request->file('imagepath')->store('candidates', 'public');
+        }
 
         // Create candidate
         $candidate = Candidate::create([
             'candidate_name' => $validated['candidate_name'],
             'party_affiliation' => $validated['party_affiliation'],
+            'imagepath' => $imagePath,
             'position_id' => $validated['position_id'],
             'status' => 'Active'
         ]);

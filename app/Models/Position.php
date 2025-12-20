@@ -28,4 +28,19 @@ class Position extends Model
     {
         return $this->hasMany(Candidate::class, 'position_id', 'position_id');
     }
+
+    /**
+     * Get the vote counts for candidates in this position
+     */
+    public function voteCounts()
+    {
+        return $this->hasManyThrough(
+            VoteCount::class,
+            Candidate::class,
+            'position_id',
+            'candidate_id',
+            'position_id',
+            'candidate_id'
+        );
+    }
 }

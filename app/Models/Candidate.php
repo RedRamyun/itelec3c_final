@@ -13,6 +13,7 @@ class Candidate extends Model
     protected $fillable = [
         'candidate_name',
         'party_affiliation',
+        'imagepath',
         'position_id',
         'status',
         'created_at',
@@ -27,5 +28,13 @@ class Candidate extends Model
     public function position()
     {
         return $this->belongsTo(Position::class, 'position_id', 'position_id');
+    }
+
+    /**
+     * Get the vote count for this candidate
+     */
+    public function voteCount()
+    {
+        return $this->hasOne(VoteCount::class, 'candidate_id', 'candidate_id');
     }
 }

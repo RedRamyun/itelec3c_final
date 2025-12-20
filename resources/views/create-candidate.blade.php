@@ -70,7 +70,7 @@
                     </div>
                     
                     <h1 class="text-center">Candidate Registration</h1>
-                    <form action="{{ route('register.candidate.store') }}" method="POST">
+                    <form action="{{ route('register.candidate.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <!-- Candidate Name -->
@@ -86,6 +86,15 @@
                             <div class="col">
                                 <label for="party_affiliation" class="form-label">Party Affiliation</label>
                                 <input type="text" name="party_affiliation" id="party_affiliation" class="form-control" value="{{ old('party_affiliation') }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Candidate Photo -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="imagepath" class="form-label">Candidate Photo (Optional)</label>
+                                <input type="file" name="imagepath" id="imagepath" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif">
+                                <small class="text-muted">Accepted formats: JPEG, PNG, JPG, GIF (Max: 2MB)</small>
                             </div>
                         </div>
 
