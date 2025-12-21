@@ -34,6 +34,30 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
+<<<<<<< HEAD
+=======
+            position: relative;
+            overflow: auto;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+>>>>>>> 1f9dcd513ececccb3863e96ae1df87243e32751c
         }
 
         .login-container {
