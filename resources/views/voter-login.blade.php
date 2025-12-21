@@ -1,118 +1,352 @@
-@extends('layouts.voter')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Login - Student Election System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-@section('title', 'Voter Login - Student Election System')
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0f2e 0%, #0f172a 50%, #4a1d6f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 1rem;
+        }
 
-@section('content')
-<div class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center px-4 py-12 sm:py-20 relative overflow-hidden">
-    <!-- Animated Decorative background elements -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-40 -right-40 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-violet-400/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-400/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 4s;"></div>
-    </div>
+        .login-wrapper {
+            width: 100%;
+            max-width: 28rem;
+        }
 
-    <div class="max-w-md w-full relative z-10">
-        <!-- Back Button -->
-        <a href="{{ route('welcome') }}" class="inline-flex items-center text-cyan-300 hover:text-cyan-100 mb-12 font-medium transition-all hover:gap-3 gap-2 group">
-            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Back to Home
-        </a>
+        .login-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.95) 100%);
+            border: 2px solid rgba(34, 211, 238, 0.3);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 3rem 2rem;
+            backdrop-filter: blur(32px);
+        }
 
-        <!-- Login Card -->
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden border-2 border-cyan-400/40 hover:border-cyan-300/80 hover:shadow-3xl hover:shadow-cyan-500/30 transition-all duration-500">
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-circle svg {
+            width: 2rem;
+            height: 2rem;
+            color: #e0f2fe;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #cffafe, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: rgba(34, 211, 238, 0.8);
+            font-size: 0.875rem;
+        }
+
+        /* Session Status */
+        .session-status {
+            background: linear-gradient(to right, rgba(5, 150, 105, 0.4), rgba(5, 150, 105, 0.5));
+            border: 2px solid rgba(16, 185, 129, 0.6);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .session-status-icon {
+            flex-shrink: 0;
+            color: rgba(16, 185, 129, 0.8);
+            margin-top: 0.125rem;
+        }
+
+        .session-status-icon svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .session-status-text {
+            color: #a7f3d0;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: rgba(34, 211, 238, 0.9);
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(34, 211, 238, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #e0f2fe;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(34, 211, 238, 0.8);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(148, 163, 184, 0.6);
+        }
+
+        /* Form Errors */
+        .form-error {
+            background: rgba(220, 38, 38, 0.3);
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            color: #fca5a5;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .form-error-list {
+            list-style: none;
+        }
+
+        .form-error-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .form-error-list li:before {
+            content: '• ';
+            margin-right: 0.5rem;
+        }
+
+        /* Submit Button */
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(to right, #06b6d4, #2563eb);
+            color: #e0f2fe;
+            border: none;
+            padding: 0.875rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: linear-gradient(to right, #06a6d4, #1d4ed8);
+            box-shadow: 0 20px 25px -5px rgba(6, 182, 212, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .submit-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 4px solid rgba(34, 211, 238, 0.8);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            color: rgba(34, 211, 238, 0.9);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .info-box-text {
+            color: rgba(34, 211, 238, 0.7);
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .info-box-list {
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+        }
+
+        .info-box-list li {
+            color: rgba(34, 211, 238, 0.6);
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
             <!-- Header -->
-            <div class="bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-700 px-8 py-14 text-center relative overflow-hidden">
-                <div class="absolute inset-0 opacity-10">
-                    <div class="absolute inset-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+            <div class="login-header">
+                <div class="logo-circle">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
                 </div>
-                <div class="relative">
-                    <div class="w-20 h-20 bg-cyan-400/30 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-2xl transform transition-all duration-300 hover:scale-110 hover:shadow-3xl hover:shadow-cyan-400/50">
-                        <svg class="w-10 h-10 text-cyan-300" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                        </svg>
-                    </div>
-                    <h2 class="text-4xl font-bold text-cyan-300 mb-2 drop-shadow-lg">Secure Voter Login</h2>
-                    <p class="text-cyan-200 text-base leading-relaxed drop-shadow-md">Enter your credentials to cast your vote securely</p>
-                </div>
+                <h1 class="login-title">Cast Your Vote</h1>
+                <p class="login-subtitle">Secure voter authentication</p>
             </div>
 
-            <div class="px-8 py-12 space-y-7 bg-gradient-to-b from-slate-800 to-slate-900">
-                <!-- Error Messages -->
-                @if ($errors->any())
-                    <div class="bg-red-900/60 border-2 border-red-500/70 rounded-2xl p-4 backdrop-blur-sm">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-red-400 mr-1 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-red-300 text-sm mb-2">Invalid Credentials</h3>
-                                @foreach ($errors->all() as $error)
-                                    <p class="text-sm text-red-200 mb-1">{{ $error }}</p>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Login Form -->
-                <form method="POST" action="{{ route('voter.authenticate') }}" class="space-y-5">
-                    @csrf
-
-                    <!-- Full Name Field -->
-                    <div class="space-y-2">
-                        <label for="fullname" class="block text-sm font-semibold text-cyan-200">Full Name</label>
-                        <input 
-                            type="text" 
-                            id="fullname" 
-                            name="fullname" 
-                            value="{{ old('fullname') }}"
-                            required 
-                            autofocus
-                            class="block w-full px-4 py-3 bg-slate-700/80 border-2 border-cyan-400/50 rounded-xl text-black placeholder-slate-300 focus:bg-slate-600 focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 transition-all duration-200"
-                            placeholder="Juan Dela Cruz"
-                        >
-                    </div>
-
-                    <!-- Voter Key Field -->
-                    <div class="space-y-2">
-                        <label for="voter_key" class="block text-sm font-semibold text-cyan-200">Voter Key</label>
-                        <input 
-                            type="text" 
-                            id="voter_key" 
-                            name="voter_key" 
-                            required
-                            class="block w-full px-4 py-3 bg-slate-700/80 border-2 border-cyan-400/50 rounded-xl text-black placeholder-slate-300 focus:bg-slate-600 focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 transition-all duration-200"
-                            placeholder="Enter your unique voter key"
-                        >
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button 
-                        type="submit"
-                        class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:from-cyan-700 active:to-blue-700 text-black font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-95 mt-8 flex items-center justify-center gap-2"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+            <!-- Session Status -->
+            @if(session('status'))
+                <div class="session-status">
+                    <div class="session-status-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                         </svg>
-                        <span class="text-cyan-100">Login to Cast Vote</span>
-                    </button>
-                </form>
-
-                <!-- Security Message -->
-                <div class="mt-8 pt-6 border-t border-cyan-500/30">
-                    <div class="bg-emerald-950/60 border-2 border-emerald-500/80 rounded-xl p-4 backdrop-blur-sm hover:bg-emerald-900/70 transition-all shadow-lg">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <p class="text-sm text-emerald-200 font-medium">Your vote is secure and anonymous. Your credentials will not be shared.</p>
-                        </div>
                     </div>
+                    <p class="session-status-text">{{ session('status') }}</p>
                 </div>
+            @endif
+
+            <!-- Login Form -->
+            <form method="POST" action="{{ route('voter.authenticate') }}">
+                @csrf
+
+                <!-- Full Name Field -->
+                <div class="form-group">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input 
+                        id="fullname" 
+                        type="text" 
+                        name="fullname" 
+                        class="form-input" 
+                        value="{{ old('fullname') }}"
+                        placeholder="Enter your full name"
+                        required 
+                        autofocus 
+                        autocomplete="name"
+                    />
+                    @if($errors->has('fullname'))
+                        <div class="form-error">
+                            <ul class="form-error-list">
+                                @foreach($errors->get('fullname') as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Voter Key Field -->
+                <div class="form-group">
+                    <label for="voter_key" class="form-label">Voter Key</label>
+                    <input 
+                        id="voter_key" 
+                        type="text" 
+                        name="voter_key" 
+                        class="form-input"
+                        placeholder="Enter your voter key"
+                        required 
+                        autocomplete="off"
+                    />
+                    @if($errors->has('voter_key'))
+                        <div class="form-error">
+                            <ul class="form-error-list">
+                                @foreach($errors->get('voter_key') as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-button">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Login to Vote
+                </button>
+            </form>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p class="info-box-title">Need Help?</p>
+                <p class="info-box-text">If you don't have your voter key or need assistance, please contact the election administrator.</p>
+                <ul class="info-box-list">
+                    <li>✓ Keep your voter key confidential</li>
+                    <li>✓ Your vote is completely anonymous</li>
+                    <li>✓ All data is securely encrypted</li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</body>
+</html>
