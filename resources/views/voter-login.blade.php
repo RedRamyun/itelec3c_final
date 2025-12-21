@@ -46,7 +46,7 @@
             color: #fff;
             padding: 1.5rem;
             position: relative;
-            overflow: hidden;
+            overflow: auto;
         }
         
         @keyframes gradient {
