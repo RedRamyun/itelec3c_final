@@ -81,18 +81,11 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            border-radius: 12px;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .login-logo svg {
-            width: 32px;
-            height: 32px;
-            color: white;
+        .login-logo img {
+            max-height: 80px;
         }
 
         .login-title {
@@ -326,12 +319,10 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             <!-- Header -->
             <div class="login-header">
                 <div class="login-logo">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
+                    <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect Logo" style="max-width: 180px; height: auto;">
                 </div>
                 <h1 class="login-title">Voter Login</h1>
-                <p class="login-subtitle">Student Council Election System</p>
+                <p class="login-subtitle">CICSelect - Student Council Election System</p>
             </div>
 
             <!-- Session Status -->

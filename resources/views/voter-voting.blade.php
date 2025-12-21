@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cast Your Vote - Student Election</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
 
@@ -25,7 +26,7 @@
         .election-header {
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white;
-            padding: 1rem 0;
+            padding: 0.5rem 0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -574,15 +575,7 @@
     <header class="election-header">
         <div class="header-container">
             <div class="header-brand">
-                <div class="header-icon">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                </div>
-                <div class="header-title">
-                    <h1>Election System</h1>
-                    <p>Cast your vote</p>
-                </div>
+                <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect" style="height: 100px; width: auto;">
             </div>
             <div class="voter-info">
                 <p>Hello, {{ session('voter_name') }}</p>
@@ -745,8 +738,7 @@
                         Review Candidates
                     </a>
                     <button 
-                        type="submit"
-                        onclick="return confirmSubmission();"
+                        type="button"
                         class="btn btn-primary"
                         id="submitBtn"
                     >
@@ -795,13 +787,17 @@
             
             if (confirmationCheckbox && submitBtn) {
                 confirmationCheckbox.addEventListener('change', function() {
-                    // In a real implementation, you might want to check if all positions have votes
-                    // For now, just enable/disable based on confirmation
                     submitBtn.disabled = !this.checked;
                 });
                 
                 // Initial state
                 submitBtn.disabled = !confirmationCheckbox.checked;
+                
+                // Handle submit button click
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    confirmSubmission();
+                });
             }
         });
         
@@ -809,8 +805,20 @@
             // Check if confirmation is checked
             const confirmationCheckbox = document.getElementById('confirmation');
             if (!confirmationCheckbox || !confirmationCheckbox.checked) {
-                alert('Please confirm your vote by checking the confirmation box.');
-                return false;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Confirmation Required',
+                    text: 'Please confirm your vote by checking the confirmation box.',
+                    background: '#0F3460',
+                    color: '#fff',
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Got it',
+                    didOpen: (modal) => {
+                        modal.style.borderRadius = '12px';
+                        modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                    }
+                });
+                return;
             }
             
             // Count selected votes
@@ -818,10 +826,76 @@
             const totalPositions = {{ $positions->count() }};
             
             if (selectedVotes !== totalPositions) {
-                return confirm('You have not voted for all positions. Are you sure you want to submit? You can choose to abstain for specific positions.');
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Incomplete Voting',
+                    html: 'You have not voted for all positions.<br><br>You can choose to <strong>abstain</strong> for specific positions.<br><br>Are you sure you want to submit?',
+                    background: '#1e3a8a',
+                    color: '#fff',
+                    confirmButtonColor: '#2563eb',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, Submit',
+                    cancelButtonText: 'Go Back',
+                    showCancelButton: true,
+                    allowOutsideClick: false,
+                    didOpen: (modal) => {
+                        modal.style.borderRadius = '12px';
+                        modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                        const confirmBtn = modal.querySelector('.swal2-confirm');
+                        const cancelBtn = modal.querySelector('.swal2-cancel');
+                        confirmBtn.style.borderRadius = '8px';
+                        confirmBtn.style.padding = '0.75rem 2rem';
+                        cancelBtn.style.borderRadius = '8px';
+                        cancelBtn.style.padding = '0.75rem 2rem';
+                        cancelBtn.style.color = '#fff';
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('votingForm').submit();
+                    }
+                });
+                return;
             }
             
-            return confirm('Are you sure you want to submit your vote? This action cannot be undone.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Confirm Your Vote',
+                html: '<strong>Are you sure you want to submit your vote?</strong><br><br><span style="color: #fca5a5; font-weight: 600;">⚠ This action cannot be undone.</span>',
+                background: '#1e3a8a',
+                color: '#fff',
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, Submit Vote',
+                cancelButtonText: 'Cancel',
+                showCancelButton: true,
+                allowOutsideClick: false,
+                didOpen: (modal) => {
+                    modal.style.borderRadius = '12px';
+                    modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                    modal.style.border = '1px solid #64748b';
+                    const title = modal.querySelector('.swal2-title');
+                    title.style.fontSize = '1.35rem';
+                    title.style.fontWeight = '700';
+                    const content = modal.querySelector('.swal2-html-container');
+                    content.style.fontSize = '0.95rem';
+                    content.style.lineHeight = '1.6';
+                    const confirmBtn = modal.querySelector('.swal2-confirm');
+                    const cancelBtn = modal.querySelector('.swal2-cancel');
+                    confirmBtn.style.borderRadius = '8px';
+                    confirmBtn.style.padding = '0.75rem 1.5rem';
+                    confirmBtn.style.fontWeight = '600';
+                    confirmBtn.style.fontSize = '0.95rem';
+                    cancelBtn.style.borderRadius = '8px';
+                    cancelBtn.style.padding = '0.75rem 1.5rem';
+                    cancelBtn.style.fontWeight = '600';
+                    cancelBtn.style.fontSize = '0.95rem';
+                    cancelBtn.style.color = '#fff';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('votingForm').submit();
+                }
+            });
         }
         
         // Save progress in localStorage

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Council Election Results</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
         
@@ -25,7 +26,7 @@
         .election-header {
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white;
-            padding: 1rem 0;
+            padding: 0.5rem 0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -734,15 +735,7 @@
     <header class="election-header">
         <div class="header-container">
             <div class="header-brand">
-                <div class="header-icon">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                </div>
-                <div class="header-title">
-                    <h1>Election Results</h1>
-                    <p>Student Council Election</p>
-                </div>
+                <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect" style="height: 100px; width: auto;">
             </div>
             
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -752,9 +745,9 @@
                         <p>Registered Student Voter</p>
                     </div>
                 @endif
-                <form method="POST" action="{{ route('voter.logout') }}" style="display: inline;">
+                <form method="POST" action="{{ route('voter.logout') }}" id="logoutForm" style="display: inline;">
                     @csrf
-                    <button type="submit" class="logout-btn">
+                    <button type="button" class="logout-btn" onclick="confirmLogout()">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
@@ -967,9 +960,9 @@
                 </svg>
                 Return to Dashboard
             </a>
-            <form method="POST" action="{{ route('voter.logout') }}" style="display: inline;">
+            <form method="POST" action="{{ route('voter.logout') }}" id="logoutFormAction" style="display: inline;">
                 @csrf
-                <button type="submit" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" onclick="confirmLogout()">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
@@ -978,5 +971,50 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sign Out',
+                html: '<strong>Are you sure you want to sign out?</strong><br><br><span style="color: #fca5a5; font-weight: 600;">You will need to log back in to vote.</span>',
+                background: '#1e3a8a',
+                color: '#fff',
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, Sign Out',
+                cancelButtonText: 'Cancel',
+                showCancelButton: true,
+                allowOutsideClick: false,
+                didOpen: (modal) => {
+                    modal.style.borderRadius = '12px';
+                    modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                    modal.style.border = '1px solid #64748b';
+                    const title = modal.querySelector('.swal2-title');
+                    title.style.fontSize = '1.35rem';
+                    title.style.fontWeight = '700';
+                    const content = modal.querySelector('.swal2-html-container');
+                    content.style.fontSize = '0.95rem';
+                    content.style.lineHeight = '1.6';
+                    const confirmBtn = modal.querySelector('.swal2-confirm');
+                    const cancelBtn = modal.querySelector('.swal2-cancel');
+                    confirmBtn.style.borderRadius = '8px';
+                    confirmBtn.style.padding = '0.75rem 1.5rem';
+                    confirmBtn.style.fontWeight = '600';
+                    confirmBtn.style.fontSize = '0.95rem';
+                    cancelBtn.style.borderRadius = '8px';
+                    cancelBtn.style.padding = '0.75rem 1.5rem';
+                    cancelBtn.style.fontWeight = '600';
+                    cancelBtn.style.fontSize = '0.95rem';
+                    cancelBtn.style.color = '#fff';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Use the first logout form (header)
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

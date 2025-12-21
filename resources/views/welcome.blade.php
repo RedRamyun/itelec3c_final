@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Student Council Election System</title>
+    <title>CICSelect - Student Council Election</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -44,24 +44,17 @@
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .nav-logo {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .nav-logo svg {
-            width: 24px;
-            height: 24px;
-            color: #1e3a8a;
+        .nav-logo img {
+            height: 100px;
+            width: auto;
         }
 
         .nav-title h1 {
@@ -387,7 +380,7 @@
         footer {
             background: #1e293b;
             color: white;
-            padding: 3rem 0;
+            padding: 1.5rem 0;
             margin-top: 4rem;
         }
 
@@ -398,46 +391,10 @@
             text-align: center;
         }
 
-        .footer-logo {
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-        }
-
-        .footer-logo svg {
-            width: 24px;
-            height: 24px;
-            color: #1e293b;
-        }
-
-        .footer-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            font-family: 'Source Sans Pro', sans-serif;
-        }
-
-        .footer-subtitle {
-            font-size: 0.875rem;
-            opacity: 0.8;
-            margin-bottom: 1.5rem;
-        }
-
         .footer-text {
             color: #cbd5e1;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-copyright {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            margin: 0;
         }
 
         /* Responsive */
@@ -494,13 +451,7 @@
         <div class="nav-container">
             <div class="nav-brand">
                 <div class="nav-logo">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                </div>
-                <div class="nav-title">
-                    <h1>Election System</h1>
-                    <p>Your Voice Matters</p>
+                    <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect">
                 </div>
             </div>
             <div class="nav-status">
@@ -652,18 +603,8 @@
     <!-- Footer -->
     <footer>
         <div class="footer-container">
-            <div class="footer-logo">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
-            </div>
-            <h3 class="footer-title">Student Council Election</h3>
-            <p class="footer-subtitle">Your Voice, Your Choice</p>
             <p class="footer-text">
-                Empowering students through democratic participation in campus governance.
-            </p>
-            <p class="footer-copyright">
-                © {{ date('Y') }} Student Council Election System. All rights reserved.
+                © {{ date('Y') }} CICSelect. All rights reserved.
             </p>
         </div>
     </footer>
