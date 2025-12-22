@@ -408,9 +408,9 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
         <div class="login-card">
             <!-- Header -->
             <div class="login-header">
-                <div class="login-logo">
+                <a href="/" class="login-logo">
                     <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect">
-                </div>
+                </a>
                 <h1 class="login-title">Voter Login</h1>
                 <p class="login-subtitle">CICSelect</p>
             </div>
