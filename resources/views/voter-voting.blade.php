@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
         * {
             margin: 0;
@@ -17,26 +17,27 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8fafc;
-            color: #334155;
-            line-height: 1.6;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            color: #1e293b;
+            line-height: 1.7;
         }
 
         /* Header */
         .election-header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             color: white;
-            padding: 0.5rem 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15);
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,6 +47,17 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+        }
+
+        .header-brand img {
+            height: 90px;
+            width: auto;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .header-brand img:hover {
+            transform: scale(1.05);
         }
 
         .header-icon {
@@ -61,18 +73,19 @@
         .header-icon svg {
             width: 20px;
             height: 20px;
-            color: #1e3a8a;
+            color: #1e40af;
         }
 
         .header-title h1 {
             font-size: 1.25rem;
             font-weight: 700;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.025em;
         }
 
         .header-title p {
             font-size: 0.75rem;
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         .voter-info {
@@ -81,88 +94,92 @@
 
         .voter-info p:first-child {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
         }
 
         .voter-info p:last-child {
-            font-size: 0.75rem;
+            font-size: 0.8125rem;
             opacity: 0.9;
         }
 
         /* Main Content */
         .main-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            max-width: 1000px;
+            margin: 2.5rem auto;
+            padding: 0 2rem;
         }
 
         /* Page Header */
         .page-header {
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem 0;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem 0;
         }
 
         .page-header h1 {
-            font-size: 1.75rem;
-            color: #1e293b;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 2.5rem;
+            color: #0f172a;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.03em;
         }
 
         .page-header p {
             color: #64748b;
-            font-size: 1rem;
+            font-size: 1.0625rem;
+            line-height: 1.6;
         }
 
         /* Instructions */
         .instructions-card {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
             margin-bottom: 2rem;
             display: flex;
-            gap: 1rem;
+            gap: 1.25rem;
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.1);
         }
 
         .instructions-icon {
             flex-shrink: 0;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             color: #2563eb;
         }
 
         .instructions-content h3 {
             font-weight: 600;
-            color: #1e293b;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            color: #1e40af;
+            font-size: 1.0625rem;
+            margin-bottom: 0.625rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .instructions-content p {
-            color: #475569;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            color: #1e40af;
+            font-size: 0.9375rem;
+            line-height: 1.65;
         }
 
         /* Error Messages */
         .error-messages {
-            background: #fee2e2;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border: 1px solid #fca5a5;
-            border-radius: 10px;
-            padding: 1.5rem;
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
             margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(239, 68, 68, 0.1);
         }
 
         .error-messages h3 {
             color: #dc2626;
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            margin-bottom: 1rem;
+            font-size: 1.0625rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .error-messages ul {
@@ -171,52 +188,60 @@
 
         .error-messages li {
             color: #dc2626;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.625rem;
             display: flex;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            gap: 0.625rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
         }
 
         /* Voting Form */
         .voting-form {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         /* Position Card */
         .position-card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .position-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
 
         .position-header {
-            background: #f1f5f9;
-            padding: 1.25rem;
-            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 2rem;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .position-header-content {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .position-number {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
             color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 1rem;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            font-family: 'Poppins', sans-serif;
         }
 
         .position-title-section {
@@ -224,72 +249,100 @@
         }
 
         .position-title {
-            font-size: 1.15rem;
-            color: #1e293b;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1.5rem;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.025em;
         }
 
         .position-description {
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
+            line-height: 1.6;
         }
 
         /* Candidates List */
         .candidates-list {
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .candidate-option {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 0.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1rem;
             background: white;
+            position: relative;
         }
 
         .candidate-option:hover {
             border-color: #cbd5e1;
             background: #f8fafc;
+            transform: translateX(4px);
         }
 
         .candidate-option.selected {
-            border-color: #2563eb;
-            background: rgba(37, 99, 235, 0.05);
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .candidate-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
 
         .candidate-radio {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             flex-shrink: 0;
             cursor: pointer;
-            accent-color: #2563eb;
+            accent-color: #3b82f6;
         }
 
         .candidate-content {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
             flex: 1;
         }
 
         .candidate-photo {
-            width: 56px;
-            height: 56px;
-            border-radius: 8px;
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
             overflow: hidden;
             flex-shrink: 0;
-            background: #f1f5f9;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .candidate-option:hover .candidate-photo {
+            transform: scale(1.05);
         }
 
         .candidate-photo img {
@@ -299,230 +352,281 @@
         }
 
         .candidate-photo svg {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             color: #94a3b8;
         }
 
         .candidate-info h4 {
-            font-size: 1rem;
+            font-size: 1.0625rem;
             font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.25rem;
+            color: #0f172a;
+            margin-bottom: 0.375rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .candidate-info p {
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             margin-bottom: 0.25rem;
+            font-weight: 500;
         }
 
         /* Abstain Option */
         .abstain-option {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 1px dashed #94a3b8;
-            border-radius: 8px;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border: 2px dashed #94a3b8;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             background: #f8fafc;
+            position: relative;
         }
 
         .abstain-option:hover {
             border-color: #64748b;
             background: #f1f5f9;
+            transform: translateX(4px);
         }
 
         .abstain-option.selected {
-            border-color: #7c3aed;
-            background: rgba(124, 58, 237, 0.05);
+            border-color: #8b5cf6;
+            border-style: solid;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(196, 181, 253, 0.05) 100%);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .abstain-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
         }
 
         .abstain-option svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             color: #7c3aed;
             flex-shrink: 0;
         }
 
         .abstain-text {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: #475569;
             flex: 1;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Confirmation Section */
         .confirmation-section {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 1rem;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #86efac;
+            border-radius: 20px;
+            padding: 2rem 2.25rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 2px 12px rgba(34, 197, 94, 0.1);
         }
 
         .confirmation-checkbox-label {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
+            gap: 1.25rem;
             cursor: pointer;
         }
 
         .confirmation-checkbox {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            margin-top: 0.15rem;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            margin-top: 0.25rem;
             cursor: pointer;
             accent-color: #16a34a;
         }
 
         .confirmation-content h3 {
-            font-weight: 600;
+            font-weight: 700;
             color: #15803d;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .confirmation-items {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .confirmation-item {
             display: flex;
             align-items: flex-start;
-            gap: 0.5rem;
+            gap: 0.75rem;
             color: #166534;
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
             font-weight: 500;
         }
 
         .confirmation-item svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             color: #16a34a;
             flex-shrink: 0;
-            margin-top: 0.15rem;
+            margin-top: 0.25rem;
         }
 
         /* Action Buttons */
         .action-buttons {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e2e8f0;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 2px solid #e2e8f0;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
+            gap: 0.75rem;
+            padding: 1.125rem 2rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             flex: 1;
         }
 
         .btn-secondary {
-            background: #f1f5f9;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             color: #475569;
-            border: 1px solid #cbd5e1;
+            border: 2px solid #cbd5e1;
         }
 
         .btn-secondary:hover {
-            background: #e2e8f0;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             border-color: #94a3b8;
+            transform: translateY(-2px);
         }
 
         .btn-primary {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
             color: white;
-            border: 1px solid #1d4ed8;
+            border: none;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary:hover {
-            background: #1d4ed8;
-            border-color: #1e40af;
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
         }
 
         .btn-primary:disabled {
-            background: #94a3b8;
-            border-color: #64748b;
+            background: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 100%);
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .btn svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
         }
 
         /* No Positions */
         .no-positions {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 4rem 2rem;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #e2e8f0;
         }
 
         .no-positions p {
-            font-size: 1rem;
+            font-size: 1.0625rem;
             color: #475569;
             font-weight: 600;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         /* Progress Indicator */
         .progress-indicator {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             margin-bottom: 2rem;
-            padding: 1rem;
+            padding: 1.25rem 1.5rem;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
             border: 1px solid #e2e8f0;
         }
 
         .progress-number {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
             color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 0.8rem;
+            font-weight: 700;
+            font-size: 0.875rem;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            font-family: 'Poppins', sans-serif;
         }
 
         .progress-text {
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
             color: #475569;
+            font-weight: 500;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
-                gap: 0.75rem;
+                gap: 1rem;
                 text-align: center;
+            }
+
+            .header-brand img {
+                height: 75px;
             }
 
             .voter-info {
@@ -530,11 +634,25 @@
             }
 
             .main-container {
-                padding: 0 1rem;
+                padding: 0 1.5rem;
+                margin: 2rem auto;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .position-header {
+                padding: 1.5rem;
+            }
+
+            .candidates-list {
+                padding: 1.5rem;
             }
 
             .action-buttons {
                 flex-direction: column;
+                gap: 1rem;
             }
 
             .btn {
@@ -542,30 +660,73 @@
             }
 
             .candidate-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
             }
 
             .candidate-photo {
-                width: 48px;
-                height: 48px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .confirmation-section {
+                padding: 1.75rem 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
+            .page-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+
             .page-header h1 {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
             }
 
             .position-header-content {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 0.5rem;
+                gap: 0.75rem;
             }
 
             .candidates-list {
+                padding: 1.25rem;
+            }
+
+            .candidate-option {
+                padding: 1rem 1.25rem;
+            }
+
+            .abstain-option {
+                padding: 1rem 1.25rem;
+            }
+
+            .main-container {
+                margin: 1.5rem auto;
+            }
+
+            .instructions-card {
+                padding: 1.5rem;
+            }
+
+            .voting-form {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header-brand img {
+                height: 65px;
+            }
+
+            .candidate-option {
                 padding: 1rem;
+            }
+
+            .confirmation-section {
+                padding: 1.5rem 1.25rem;
             }
         }
     </style>
@@ -809,13 +970,32 @@
                     icon: 'warning',
                     title: 'Confirmation Required',
                     text: 'Please confirm your vote by checking the confirmation box.',
-                    background: '#0F3460',
-                    color: '#fff',
+                    background: '#ffffff',
+                    color: '#1e293b',
+                    iconColor: '#f59e0b',
                     confirmButtonColor: '#2563eb',
                     confirmButtonText: 'Got it',
                     didOpen: (modal) => {
-                        modal.style.borderRadius = '12px';
-                        modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                        modal.style.borderRadius = '16px';
+                        modal.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.2)';
+                        modal.style.border = '2px solid #e2e8f0';
+                        
+                        const title = modal.querySelector('.swal2-title');
+                        title.style.fontFamily = "'Poppins', sans-serif";
+                        title.style.fontWeight = '800';
+                        title.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+                        title.style.webkitBackgroundClip = 'text';
+                        title.style.webkitTextFillColor = 'transparent';
+                        title.style.backgroundClip = 'text';
+                        
+                        const confirmBtn = modal.querySelector('.swal2-confirm');
+                        confirmBtn.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)';
+                        confirmBtn.style.border = 'none';
+                        confirmBtn.style.borderRadius = '10px';
+                        confirmBtn.style.padding = '0.875rem 2rem';
+                        confirmBtn.style.fontWeight = '700';
+                        confirmBtn.style.fontFamily = "'Poppins', sans-serif";
+                        confirmBtn.style.boxShadow = '0 4px 16px rgba(37, 99, 235, 0.25)';
                     }
                 });
                 return;
@@ -830,8 +1010,9 @@
                     icon: 'question',
                     title: 'Incomplete Voting',
                     html: 'You have not voted for all positions.<br><br>You can choose to <strong>abstain</strong> for specific positions.<br><br>Are you sure you want to submit?',
-                    background: '#1e3a8a',
-                    color: '#fff',
+                    background: '#ffffff',
+                    color: '#1e293b',
+                    iconColor: '#3b82f6',
                     confirmButtonColor: '#2563eb',
                     cancelButtonColor: '#64748b',
                     confirmButtonText: 'Yes, Submit',
@@ -839,15 +1020,39 @@
                     showCancelButton: true,
                     allowOutsideClick: false,
                     didOpen: (modal) => {
-                        modal.style.borderRadius = '12px';
-                        modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
+                        modal.style.borderRadius = '16px';
+                        modal.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.2)';
+                        modal.style.border = '2px solid #e2e8f0';
+                        
+                        const title = modal.querySelector('.swal2-title');
+                        title.style.fontFamily = "'Poppins', sans-serif";
+                        title.style.fontWeight = '800';
+                        title.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+                        title.style.webkitBackgroundClip = 'text';
+                        title.style.webkitTextFillColor = 'transparent';
+                        title.style.backgroundClip = 'text';
+                        
+                        const content = modal.querySelector('.swal2-html-container');
+                        content.style.fontSize = '1rem';
+                        content.style.lineHeight = '1.6';
+                        
                         const confirmBtn = modal.querySelector('.swal2-confirm');
+                        confirmBtn.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)';
+                        confirmBtn.style.border = 'none';
+                        confirmBtn.style.borderRadius = '10px';
+                        confirmBtn.style.padding = '0.875rem 2rem';
+                        confirmBtn.style.fontWeight = '700';
+                        confirmBtn.style.fontFamily = "'Poppins', sans-serif";
+                        confirmBtn.style.boxShadow = '0 4px 16px rgba(37, 99, 235, 0.25)';
+                        
                         const cancelBtn = modal.querySelector('.swal2-cancel');
-                        confirmBtn.style.borderRadius = '8px';
-                        confirmBtn.style.padding = '0.75rem 2rem';
-                        cancelBtn.style.borderRadius = '8px';
-                        cancelBtn.style.padding = '0.75rem 2rem';
-                        cancelBtn.style.color = '#fff';
+                        cancelBtn.style.background = 'white';
+                        cancelBtn.style.color = '#475569';
+                        cancelBtn.style.border = '2px solid #cbd5e1';
+                        cancelBtn.style.borderRadius = '10px';
+                        cancelBtn.style.padding = '0.875rem 2rem';
+                        cancelBtn.style.fontWeight = '700';
+                        cancelBtn.style.fontFamily = "'Poppins', sans-serif";
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -860,9 +1065,10 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Confirm Your Vote',
-                html: '<strong>Are you sure you want to submit your vote?</strong><br><br><span style="color: #fca5a5; font-weight: 600;">⚠ This action cannot be undone.</span>',
-                background: '#1e3a8a',
-                color: '#fff',
+                html: '<strong>Are you sure you want to submit your vote?</strong><br><br><span style="color: #dc2626; font-weight: 600;">⚠ This action cannot be undone.</span>',
+                background: '#ffffff',
+                color: '#1e293b',
+                iconColor: '#f59e0b',
                 confirmButtonColor: '#2563eb',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Yes, Submit Vote',
@@ -870,26 +1076,68 @@
                 showCancelButton: true,
                 allowOutsideClick: false,
                 didOpen: (modal) => {
-                    modal.style.borderRadius = '12px';
-                    modal.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.15)';
-                    modal.style.border = '1px solid #64748b';
+                    modal.style.borderRadius = '16px';
+                    modal.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.2)';
+                    modal.style.border = '2px solid #e2e8f0';
+                    
                     const title = modal.querySelector('.swal2-title');
-                    title.style.fontSize = '1.35rem';
-                    title.style.fontWeight = '700';
+                    title.style.fontSize = '1.75rem';
+                    title.style.fontWeight = '800';
+                    title.style.fontFamily = "'Poppins', sans-serif";
+                    title.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+                    title.style.webkitBackgroundClip = 'text';
+                    title.style.webkitTextFillColor = 'transparent';
+                    title.style.backgroundClip = 'text';
+                    title.style.marginBottom = '1.5rem';
+                    
                     const content = modal.querySelector('.swal2-html-container');
-                    content.style.fontSize = '0.95rem';
+                    content.style.fontSize = '1rem';
                     content.style.lineHeight = '1.6';
+                    content.style.marginBottom = '2rem';
+                    
                     const confirmBtn = modal.querySelector('.swal2-confirm');
-                    const cancelBtn = modal.querySelector('.swal2-cancel');
-                    confirmBtn.style.borderRadius = '8px';
-                    confirmBtn.style.padding = '0.75rem 1.5rem';
-                    confirmBtn.style.fontWeight = '600';
+                    confirmBtn.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)';
+                    confirmBtn.style.border = 'none';
+                    confirmBtn.style.borderRadius = '10px';
+                    confirmBtn.style.padding = '0.875rem 2rem';
+                    confirmBtn.style.fontWeight = '700';
                     confirmBtn.style.fontSize = '0.95rem';
-                    cancelBtn.style.borderRadius = '8px';
-                    cancelBtn.style.padding = '0.75rem 1.5rem';
-                    cancelBtn.style.fontWeight = '600';
+                    confirmBtn.style.fontFamily = "'Poppins', sans-serif";
+                    confirmBtn.style.boxShadow = '0 4px 16px rgba(37, 99, 235, 0.25)';
+                    confirmBtn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    const cancelBtn = modal.querySelector('.swal2-cancel');
+                    cancelBtn.style.background = 'white';
+                    cancelBtn.style.color = '#475569';
+                    cancelBtn.style.border = '2px solid #cbd5e1';
+                    cancelBtn.style.borderRadius = '10px';
+                    cancelBtn.style.padding = '0.875rem 2rem';
+                    cancelBtn.style.fontWeight = '700';
                     cancelBtn.style.fontSize = '0.95rem';
-                    cancelBtn.style.color = '#fff';
+                    cancelBtn.style.fontFamily = "'Poppins', sans-serif";
+                    cancelBtn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    confirmBtn.addEventListener('mouseenter', () => {
+                        confirmBtn.style.transform = 'translateY(-2px)';
+                        confirmBtn.style.boxShadow = '0 6px 24px rgba(37, 99, 235, 0.35)';
+                    });
+                    
+                    confirmBtn.addEventListener('mouseleave', () => {
+                        confirmBtn.style.transform = 'translateY(0)';
+                        confirmBtn.style.boxShadow = '0 4px 16px rgba(37, 99, 235, 0.25)';
+                    });
+                    
+                    cancelBtn.addEventListener('mouseenter', () => {
+                        cancelBtn.style.background = '#f8fafc';
+                        cancelBtn.style.borderColor = '#94a3b8';
+                        cancelBtn.style.transform = 'translateY(-2px)';
+                    });
+                    
+                    cancelBtn.addEventListener('mouseleave', () => {
+                        cancelBtn.style.background = 'white';
+                        cancelBtn.style.borderColor = '#cbd5e1';
+                        cancelBtn.style.transform = 'translateY(0)';
+                    });
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
