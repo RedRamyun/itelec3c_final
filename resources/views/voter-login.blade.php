@@ -17,7 +17,7 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
     <title>Student Council Election - Voter Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
         
         * {
             margin: 0;
@@ -27,49 +27,57 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8fafc;
-            color: #334155;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            color: #1e293b;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
             position: relative;
             overflow: auto;
-        }
-        
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
         }
 
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
         }
 
         .login-card {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             border: 1px solid #e2e8f0;
-            padding: 2.5rem;
+            padding: 3rem 2.5rem;
             position: relative;
             overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-header {
@@ -82,36 +90,56 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .login-logo:hover {
+            transform: scale(1.05);
         }
 
         .login-logo img {
             height: 100px;
             width: auto;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
         }
 
         .login-title {
-            font-size: 1.75rem;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 0.625rem;
             font-weight: 700;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.025em;
         }
 
         .login-subtitle {
             color: #64748b;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         /* Session Status */
         .session-status {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #86efac;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.75rem;
             display: flex;
             align-items: flex-start;
-            gap: 0.75rem;
+            gap: 0.875rem;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .session-status-icon {
@@ -121,15 +149,15 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
         }
 
         .session-status-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
         }
 
         .session-status-text {
             color: #166534;
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
             font-weight: 500;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         /* Form Styles */
@@ -140,27 +168,33 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
         .form-label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #475569;
-            font-size: 0.9rem;
+            margin-bottom: 0.625rem;
+            color: #334155;
+            font-size: 0.9375rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .form-input {
             width: 100%;
-            background: white;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 0.875rem 1rem;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.875rem 1.125rem;
             color: #1e293b;
             font-size: 1rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input:hover:not(:focus) {
+            border-color: #cbd5e1;
         }
 
         .form-input::placeholder {
@@ -169,13 +203,20 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
 
         /* Form Errors */
         .form-error {
-            background: #fee2e2;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border: 1px solid #fca5a5;
-            border-radius: 8px;
-            padding: 0.75rem;
-            margin-top: 0.5rem;
+            border-radius: 10px;
+            padding: 0.875rem 1rem;
+            margin-top: 0.625rem;
             color: #dc2626;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
+            animation: shake 0.4s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .form-error-list {
@@ -183,79 +224,103 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
         }
 
         .form-error-list li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.375rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .form-error-list li:last-child {
+            margin-bottom: 0;
         }
 
         .form-error-list li:before {
             content: '•';
             color: #dc2626;
             font-weight: 700;
+            font-size: 1.125rem;
         }
 
         /* Submit Button */
         .submit-button {
             width: 100%;
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
             color: white;
             border: none;
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.125rem 2rem;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.0625rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 0.625rem;
+            margin-top: 0.75rem;
             font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-button:hover:not(:disabled)::before {
+            left: 100%;
         }
 
         .submit-button:hover:not(:disabled) {
-            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
         }
 
         .submit-button:active:not(:disabled) {
             transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
         .submit-button:disabled {
-            background: #94a3b8;
+            background: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 100%);
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .submit-button svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
         }
 
         /* Help Section */
         .help-section {
-            background: #f8fafc;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.5rem;
+            border-radius: 16px;
+            padding: 1.75rem 1.5rem;
             margin-top: 2rem;
         }
 
         .help-title {
             font-weight: 600;
-            color: #475569;
-            margin-bottom: 0.75rem;
-            font-size: 0.95rem;
-            font-family: 'Source Sans Pro', sans-serif;
+            color: #334155;
+            margin-bottom: 0.875rem;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .help-text {
             color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.9375rem;
+            line-height: 1.6;
             margin-bottom: 1rem;
         }
 
@@ -265,44 +330,75 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
 
         .help-list li {
             color: #475569;
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.625rem;
             display: flex;
             align-items: flex-start;
-            gap: 0.5rem;
+            gap: 0.625rem;
             font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .help-list li:last-child {
+            margin-bottom: 0;
         }
         
         .help-list li:before {
             content: '✓';
-            color: #2563eb;
+            color: #3b82f6;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 1rem;
             flex-shrink: 0;
         }
 
         /* Footer Note */
         .footer-note {
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: 1.75rem;
             color: #94a3b8;
-            font-size: 0.85rem;
-            line-height: 1.5;
+            font-size: 0.875rem;
+            line-height: 1.6;
         }
 
         /* Responsive */
         @media (max-width: 480px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
+
             .login-card {
-                padding: 2rem 1.5rem;
-                border-radius: 12px;
+                padding: 2.5rem 2rem;
+                border-radius: 20px;
             }
 
             .login-title {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
             }
             
             .login-logo img {
-                height: 80px;
+                height: 85px;
+            }
+
+            .form-input {
+                padding: 0.875rem 1rem;
+            }
+
+            .submit-button {
+                padding: 1rem 1.5rem;
+            }
+
+            .help-section {
+                padding: 1.5rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-logo img {
+                height: 75px;
             }
         }
     </style>
