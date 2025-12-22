@@ -81,18 +81,12 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            border-radius: 12px;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .login-logo svg {
-            width: 32px;
-            height: 32px;
-            color: white;
+        .login-logo img {
+            height: 100px;
+            width: auto;
         }
 
         .login-title {
@@ -307,15 +301,8 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
                 font-size: 1.5rem;
             }
             
-            .login-logo {
-                width: 56px;
-                height: 56px;
-                margin-bottom: 1rem;
-            }
-            
-            .login-logo svg {
-                width: 28px;
-                height: 28px;
+            .login-logo img {
+                height: 80px;
             }
         }
     </style>
@@ -326,12 +313,10 @@ if (in_array($status, ['pending', 'ended', 'on hold'])) {
             <!-- Header -->
             <div class="login-header">
                 <div class="login-logo">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
+                    <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect">
                 </div>
                 <h1 class="login-title">Voter Login</h1>
-                <p class="login-subtitle">Student Council Election System</p>
+                <p class="login-subtitle">CICSelect</p>
             </div>
 
             <!-- Session Status -->

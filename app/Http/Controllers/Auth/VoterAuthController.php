@@ -24,10 +24,13 @@ class VoterAuthController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'fullname' => 'required|string',
+            'fullname' => 'required|string|min:2|max:100|regex:/^[a-zA-Z\s\-\']+$/',
             'voter_key' => 'required|string',
         ], [
             'fullname.required' => 'Please enter your full name',
+            'fullname.min' => 'Full name must be at least 2 characters long',
+            'fullname.max' => 'Full name cannot exceed 100 characters',
+            'fullname.regex' => 'Full name can only contain letters, spaces, hyphens, and apostrophes',
             'voter_key.required' => 'Please enter your voter key',
         ]);
 
