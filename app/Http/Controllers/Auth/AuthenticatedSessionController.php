@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Log;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +27,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // Log the login activity
+        Log::create([
+            'activity' => 'Logged In (Admin)',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         return redirect()->intended(route('voters.list', absolute: false));
     }

@@ -582,6 +582,7 @@
                 }
             });
         }
+        
         function toggleVoterKey(voterId) {
             const hiddenKey = document.getElementById('voterKey' + voterId);
             const revealedKey = document.getElementById('voterKeyRevealed' + voterId);
@@ -596,12 +597,28 @@
                 icon.classList.add('fa-eye');
                 text.textContent = 'Show Key';
             } else {
-                // Show the key
+                // Show the key - log this action
                 hiddenKey.style.display = 'none';
                 revealedKey.style.display = 'block';
                 icon.classList.remove('fa-eye');
                 icon.classList.add('fa-eye-slash');
                 text.textContent = 'Hide Key';
+                
+                // Send AJAX request to log the view
+                fetch(`/voters/${voterId}/log-key-view`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Key view logged successfully');
+                })
+                .catch(error => {
+                    console.error('Error logging key view:', error);
+                });
             }
         }
     </script>

@@ -1,10 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Voter;
 use App\Models\Election;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use PDF; // Add this import
+use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class VoterController extends Controller
 {
@@ -86,9 +90,9 @@ class VoterController extends Controller
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('first_name', 'LIKE', "%$search%")
-                  ->orWhere('last_name', 'LIKE', "%$search%")
-                  ->orWhere('gender', 'LIKE', "%$search%")
-                  ->orWhere('contact_information', 'LIKE', "%$search%");
+                ->orWhere('last_name', 'LIKE', "%$search%")
+                ->orWhere('gender', 'LIKE', "%$search%")
+                ->orWhere('contact_information', 'LIKE', "%$search%");
             });
         }
         
@@ -135,11 +139,17 @@ class VoterController extends Controller
         // Generate filename with timestamp
         $filename = 'voters_list_' . date('Y-m-d_His') . '.pdf';
         
+        // **ADD THIS: Log the export activity**
+        Log::create([
+            'activity' => 'Exported Voters List to PDF',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         // Download PDF
         return $pdf->download($filename);
     }
-
-    // ... (rest of the existing methods remain the same)
     
     public function create()
     {
@@ -182,7 +192,7 @@ class VoterController extends Controller
         ]);
 
         $voterKey = $this->generateVoterKey();
-
+        
         $voter = Voter::create([
             'voter_key' => $voterKey,
             'first_name' => $request->input('fName'),
@@ -264,7 +274,15 @@ class VoterController extends Controller
         $voter = Voter::findOrFail($id);
         $voter->deleted_at = now();
         $voter->save();
-
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Archived a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('voters.list')
             ->with('success', 'Voter deleted successfully!');
     }
@@ -296,6 +314,14 @@ class VoterController extends Controller
         $voter = Voter::findOrFail($id);
         $voter->status = 'Active';
         $voter->save();
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Promoted Access to a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         
         return redirect()->route('voters.list')
             ->with('success', 'Voter enabled successfully!');
@@ -339,6 +365,14 @@ class VoterController extends Controller
         $voter = Voter::onlyTrashed()->findOrFail($id);
         $voter->restore();
         
+        // Log the restore activity
+        Log::create([
+            'activity' => 'Restored a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('display.archived.voters')
             ->with('success', 'Voter restored successfully!');
     }
@@ -361,5 +395,23 @@ class VoterController extends Controller
         
         return redirect()->route('display.archived.voters')
             ->with('success', 'Voter permanently deleted!');
+    }
+
+    /**
+     * Log when a user views a voter key
+     */
+    public function logKeyView($id)
+    {
+        $voter = Voter::findOrFail($id);
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Viewed Voter Key of a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        return response()->json(['success' => true]);
     }
 }

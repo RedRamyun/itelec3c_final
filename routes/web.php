@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/display-archived-voters', [VoterController::class, 'ArchivedVotersDisplay'])->name('display.archived.voters');
     Route::post('restore-voter/{id}', [VoterController::class, 'restore'])->name('restore.voter');
     Route::delete('force-delete-voter/{id}', [VoterController::class, 'forceDelete'])->name('force.delete.voter');
+    Route::post('/voters/{id}/log-key-view', [VoterController::class, 'logKeyView'])->name('voters.log.key.view');
 });
 
 // Election Control Routes
@@ -143,4 +144,9 @@ Route::middleware('auth')->group(function () {
     
     // Hard reset election system
     Route::post('/election/hard-reset', [App\Http\Controllers\ElectionController::class, 'hardReset'])->name('election.hard-reset');
+});
+
+// Log Routes - Admin Only
+Route::middleware('auth')->group(function () {
+    Route::get('/logs', [App\Http\Controllers\LogController::class, 'index'])->name('logs.display');
 });

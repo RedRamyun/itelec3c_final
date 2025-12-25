@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Election;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ElectionController extends Controller
 {
@@ -12,7 +16,7 @@ class ElectionController extends Controller
     {
         // Get current election status
         $election = Election::find(1);
-        $electionStatus = $election ? $election->status : 'Pending'; // Changed to 'Pending' with capital P
+        $electionStatus = $election ? $election->status : 'Pending';
         
         return view('Settings', compact('electionStatus'));
     }
@@ -27,6 +31,12 @@ class ElectionController extends Controller
         if ($election) {
             $election->status = 'ongoing';
             $election->save();
+            
+            // Log the activity
+            Log::create([
+                'activity' => 'Started the Election',
+                'user_id' => Auth::id(),
+            ]);
             
             return redirect()->route('dashboard')->with('success', 'Election has been started successfully!');
         }
@@ -45,6 +55,12 @@ class ElectionController extends Controller
             $election->status = 'on hold';
             $election->save();
             
+            // Log the activity
+            Log::create([
+                'activity' => 'Paused the Election',
+                'user_id' => Auth::id(),
+            ]);
+            
             return redirect()->route('dashboard')->with('success', 'Election has been paused.');
         }
         
@@ -61,6 +77,12 @@ class ElectionController extends Controller
         if ($election) {
             $election->status = 'ongoing';
             $election->save();
+            
+            // Log the activity
+            Log::create([
+                'activity' => 'Resumed the Election',
+                'user_id' => Auth::id(),
+            ]);
             
             return redirect()->route('dashboard')->with('success', 'Election has been resumed.');
         }
@@ -79,6 +101,12 @@ class ElectionController extends Controller
             $election->status = 'ended';
             $election->save();
             
+            // Log the activity
+            Log::create([
+                'activity' => 'Ended the Election',
+                'user_id' => Auth::id(),
+            ]);
+            
             return redirect()->route('dashboard')->with('success', 'Election has been ended.');
         }
         
@@ -91,7 +119,7 @@ class ElectionController extends Controller
      */
     public function hardReset()
     {
-        // Check election status before allowing hard reset (allow when Pending or Ended)
+        // Check election status before allowing hard reset
         $election = Election::find(1);
         if ($election && !in_array(strtolower($election->status), ['pending', 'ended'])) {
             return redirect()->route('settings')
@@ -108,7 +136,7 @@ class ElectionController extends Controller
             // Delete all records from votes table
             \DB::table('votes')->delete();
             
-            // Reset election status to "Pending" (ID = 1)
+            // Reset election status to "Pending"
             \DB::table('elections')
                 ->where('id', 1)
                 ->update(['status' => 'Pending']);
@@ -116,6 +144,12 @@ class ElectionController extends Controller
             // Reset has_voted to 0 for all voters
             \DB::table('voters')
                 ->update(['has_voted' => 0]);
+            
+            // Log the activity
+            Log::create([
+                'activity' => 'Performed Hard Reset on Election System',
+                'user_id' => Auth::id(),
+            ]);
             
             return redirect()->route('settings')->with('success', 'Election system has been hard reset successfully! All data has been cleared.');
             
