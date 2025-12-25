@@ -299,6 +299,14 @@ class VoterController extends Controller
         $voter->status = 'Disabled';
         $voter->save();
 
+        // Log the activity
+        Log::create([
+            'activity' => 'Removed Access of a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('voters.list')
             ->with('success', 'Voter disabled successfully!');
     }
@@ -392,7 +400,15 @@ class VoterController extends Controller
         }
         
         $voter->forceDelete();
-        
+
+        // Log the activity
+        Log::create([
+            'activity' => 'Permanently Deleted a Voter (ID: ' . $voter->voter_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('display.archived.voters')
             ->with('success', 'Voter permanently deleted!');
     }

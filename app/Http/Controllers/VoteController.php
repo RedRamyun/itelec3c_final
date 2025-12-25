@@ -6,9 +6,11 @@ use App\Models\VoteCount;
 use App\Models\Voter;
 use App\Models\Position;
 use App\Models\Candidate;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class VoteController extends Controller
@@ -351,6 +353,14 @@ class VoteController extends Controller
         // Generate filename with timestamp
         $filename = 'votes_list_' . date('Y-m-d_His') . '.pdf';
         
+        // Log the activity
+        Log::create([
+            'activity' => 'Exported Votes List to PDF',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         // Download PDF
         return $pdf->download($filename);
     }
@@ -400,6 +410,14 @@ class VoteController extends Controller
         
         // Generate filename with timestamp
         $filename = 'vote_counts_report_' . date('Y-m-d_His') . '.pdf';
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Exported Current Election Results',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         
         // Download PDF
         return $pdf->download($filename);

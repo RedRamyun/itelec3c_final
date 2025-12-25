@@ -147,8 +147,10 @@ class ElectionController extends Controller
             
             // Log the activity
             Log::create([
-                'activity' => 'Performed Hard Reset on Election System',
+                'activity' => 'Executed Election Reset',
                 'user_id' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
             
             return redirect()->route('settings')->with('success', 'Election system has been hard reset successfully! All data has been cleared.');

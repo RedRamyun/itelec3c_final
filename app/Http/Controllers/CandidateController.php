@@ -6,8 +6,10 @@ use App\Models\Candidate;
 use App\Models\Position;
 use App\Models\VoteCount;
 use App\Models\Election;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class CandidateController extends Controller
 {
@@ -200,6 +202,14 @@ class CandidateController extends Controller
             'vote_count' => 0,
         ]);
 
+        // Log the activity
+        Log::create([
+            'activity' => 'Added a New Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('register.candidate')
             ->with('success', 'Candidate registered successfully!');
     }
@@ -281,6 +291,14 @@ class CandidateController extends Controller
             'position_id' => $validated['position_id']
         ]);
 
+        // Log the activity
+        Log::create([
+            'activity' => 'Edited Candidate Information (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('display.candidates')
             ->with('success', 'Candidate updated successfully!');
     }
@@ -299,7 +317,15 @@ class CandidateController extends Controller
         
         $candidate = Candidate::findOrFail($id);
         $candidate->delete(); // Soft delete
-        
+
+        // Log the activity
+        Log::create([
+            'activity' => 'Archived a Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('display.candidates')
             ->with('success', 'Candidate deleted successfully!');
     }
@@ -349,6 +375,14 @@ class CandidateController extends Controller
         $candidate = Candidate::onlyTrashed()->findOrFail($id);
         $candidate->restore();
         
+        // Log the activity
+        Log::create([
+            'activity' => 'Restored a Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('display.archived.candidates')
             ->with('success', 'Candidate restored successfully!');
     }
@@ -368,6 +402,14 @@ class CandidateController extends Controller
         $candidate = Candidate::onlyTrashed()->findOrFail($id);
         $candidate->forceDelete(); // Permanent delete
         
+        // Log the activity
+        Log::create([
+            'activity' => 'Permanently Deleted a Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('display.archived.candidates')
             ->with('success', 'Candidate permanently deleted!');
     }
@@ -386,7 +428,15 @@ class CandidateController extends Controller
         
         $candidate = Candidate::findOrFail($id);
         $candidate->update(['status' => 'Disabled']);
-        
+
+        // Log the activity
+        Log::create([
+            'activity' => 'Disabled a Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('display.candidates')
             ->with('success', 'Candidate disabled successfully!');
     }
@@ -405,7 +455,15 @@ class CandidateController extends Controller
         
         $candidate = Candidate::findOrFail($id);
         $candidate->update(['status' => 'Active']);
-        
+
+        // Log the activity
+        Log::create([
+            'activity' => 'Enabled a Candidate (ID: ' . $candidate->candidate_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return redirect()->route('display.candidates')
             ->with('success', 'Candidate enabled successfully!');
     }
@@ -483,6 +541,15 @@ class CandidateController extends Controller
         
         // Download PDF with timestamp
         $filename = 'candidates_list_' . date('Y-m-d_His') . '.pdf';
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Exported Candidates List to PDF',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return $pdf->download($filename);
     }
 }

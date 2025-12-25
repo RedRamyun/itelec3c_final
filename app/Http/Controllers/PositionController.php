@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Position;
 use App\Models\Election;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class PositionController extends Controller
@@ -49,7 +51,15 @@ class PositionController extends Controller
             $validated['description'] = trim($validated['description']);
         }
 
-        Position::create($validated);
+        $position = Position::create($validated);
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Created a New Position (ID: ' . $position->position_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         
         return redirect()->route('display.positions')
             ->with('success', 'Position created successfully!');
@@ -130,6 +140,14 @@ class PositionController extends Controller
         $position = Position::findOrFail($id);
         $position->delete();
         
+        // Log the activity
+        Log::create([
+            'activity' => 'Archived a Position (ID: ' . $position->position_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('display.positions')
             ->with('success', 'Position archived successfully!');
     }
@@ -147,6 +165,14 @@ class PositionController extends Controller
         $position = Position::onlyTrashed()->findOrFail($id);
         $position->restore();
         
+        // Log the activity
+        Log::create([
+            'activity' => 'Restored a Position (ID: ' . $position->position_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         return redirect()->route('display.archived.positions')
             ->with('success', 'Position restored successfully!');
     }
@@ -162,6 +188,15 @@ class PositionController extends Controller
         }
         
         $position = Position::onlyTrashed()->findOrFail($id);
+        
+        // Log the activity before deleting
+        Log::create([
+            'activity' => 'Permanently Deleted a Position (ID: ' . $position->position_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         $position->forceDelete();
         
         return redirect()->route('display.archived.positions')
@@ -212,6 +247,14 @@ class PositionController extends Controller
         }
 
         $position->update($validated);
+        
+        // Log the activity
+        Log::create([
+            'activity' => 'Edited a Position (ID: ' . $position->position_id . ')',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         
         return redirect()->route('display.positions')
             ->with('success', 'Position updated successfully!');

@@ -187,27 +187,14 @@
                                     <i class="fas fa-filter"></i> Filter
                                 </button>
                             </div>
-                            <div class="collapse mt-2" id="filterCollapse">
+                            <div class="collapse show mt-2" id="filterCollapse">
                                 <div class="card card-body p-3">
                                     <div class="row g-2">
-                                        <div class="col-md-4">
-                                            <label class="form-label small">Activity Type</label>
-                                            <select name="activity_type" class="form-select">
-                                                <option value="all" {{ request('activity_type')=='all' ? 'selected' : (request('activity_type') ? '' : 'selected') }}>All</option>
-                                                <option value="Created" {{ request('activity_type')=='Created' ? 'selected' : '' }}>Created</option>
-                                                <option value="Updated" {{ request('activity_type')=='Updated' ? 'selected' : '' }}>Updated</option>
-                                                <option value="Deleted" {{ request('activity_type')=='Deleted' ? 'selected' : '' }}>Deleted</option>
-                                                <option value="Enabled" {{ request('activity_type')=='Enabled' ? 'selected' : '' }}>Enabled</option>
-                                                <option value="Disabled" {{ request('activity_type')=='Disabled' ? 'selected' : '' }}>Disabled</option>
-                                                <option value="Login" {{ request('activity_type')=='Login' ? 'selected' : '' }}>Login</option>
-                                                <option value="Logout" {{ request('activity_type')=='Logout' ? 'selected' : '' }}>Logout</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <label class="form-label small">Date From</label>
                                             <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <label class="form-label small">Date To</label>
                                             <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
                                         </div>
