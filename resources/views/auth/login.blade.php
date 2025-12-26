@@ -262,6 +262,7 @@
             <div class="login-logo">
                 <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect">
             </div>
+            <h2 class="text-center mb-4 font-color"><b>Login</b></h2>
         </div>
 
         <!-- Session Status -->

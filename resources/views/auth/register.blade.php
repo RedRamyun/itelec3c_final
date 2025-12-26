@@ -184,6 +184,10 @@
             font-size: 20px;
         }
 
+        .font-color {
+            color: #1e293b;
+        }
+
         @media (max-width: 480px) {
             .register-container {
                 padding: 30px 24px;
@@ -203,6 +207,7 @@
             <div class="register-logo">
                 <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect">
             </div>
+            <h2 class="text-center mb-4 font-color"><b>Create Your Account</b></h2>
         </div>
 
         <!-- Register Form - Maintaining the original Blade structure -->
