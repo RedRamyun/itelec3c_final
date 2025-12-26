@@ -302,7 +302,6 @@
             <div class="register-footer">
                 Already have an account? 
                 <a class="login-link" href="{{ route('login') }}">
-                    <i class="fas fa-sign-in-alt"></i>
                     Sign In
                 </a>
             </div>
