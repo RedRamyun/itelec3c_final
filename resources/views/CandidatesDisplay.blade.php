@@ -192,6 +192,12 @@
                 <img src="{{ asset('Logowithtext.png') }}" alt="CICSelect" style="width: 200px; height: auto;">
             </div>
             <hr class="my-3">
+            @if(Auth::check())
+            <div class="mb-3 px-3">
+                <div class="fw-bold">{{ Auth::user()->name }}</div>
+                <div class="small text-white-50">Role: {{ Auth::user()->role }}</div>
+            </div>
+            @endif
             <ul class="nav flex-column">
                 <li class="nav-item mb-2">
                     <a href="{{ url('/dashboard') }}" class="nav-link text-white active py-3 px-3 rounded">
